@@ -25,24 +25,27 @@ const getStyleIcon = (style: LogoStyle): React.ReactNode => {
   switch (style) {
     case "NoStyle":
       return (
-        <Svg width={40} height={40} viewBox="0 0 40 40">
-          <Path
-            d="M20 36.6666C29.2 36.6666 36.6667 29.1999 36.6667 19.9999C36.6667 10.7999 29.2 3.33325 20 3.33325C10.8 3.33325 3.33337 10.7999 3.33337 19.9999C3.33337 29.1999 10.8 36.6666 20 36.6666Z"
-            stroke="#FAFAFA"
-            strokeWidth={2.7}
-            strokeMiterlimit={10}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <Path
-            d="M31.5001 8.33337L8.16675 31.6667"
-            stroke="#FAFAFA"
-            strokeWidth={2.7}
-            strokeMiterlimit={10}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </Svg>
+        <View style={styles.noStyleContainer}>
+            <Svg width={40} height={40} viewBox="0 0 40 40" style={styles.noStyleIcon}>
+              <Path
+                d="M20 36.6666C29.2 36.6666 36.6667 29.1999 36.6667 19.9999C36.6667 10.7999 29.2 3.33325 20 3.33325C10.8 3.33325 3.33337 10.7999 3.33337 19.9999C3.33337 29.1999 10.8 36.6666 20 36.6666Z"
+                stroke="#FAFAFA"
+                strokeWidth={2.7}
+                strokeMiterlimit={10}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="#282C57"
+              />
+              <Path
+                d="M31.5001 8.33337L8.16675 31.6667"
+                stroke="#FAFAFA"
+                strokeWidth={2.7}
+                strokeMiterlimit={10}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </Svg>
+        </View>
       );
     case "Monogram":
       return (
@@ -124,5 +127,18 @@ const styles = StyleSheet.create({
   },
   textSelected: {
     color: "#FFFFFF",
+  },
+  noStyleContainer: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:"#282C57"
+  },
+  noStyleIcon: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -20 }, { translateY: -20 }],
   },
 });

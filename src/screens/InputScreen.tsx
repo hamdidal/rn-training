@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   View,
   Text,
@@ -16,12 +16,13 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList, LogoStyle } from "../types";
 import { colors } from "../constants/styles/colors";
 import { theme } from "../constants/theme";
-import { PromptInput } from "../components/PromptInput";
+import { PromptInput, PromptInputHandle } from "../components/PromptInput";
 import { LogoStyleOption } from "../components/LogoStyleOption";
 import { Button } from "../components/Button";
 import { StatusChip } from "../components/StatusChip";
 import { useLogoGeneration } from "../hooks/useLogoGeneration";
 import Vector from "../assets/pngs/Vector.png";
+import Stars from "../assets/pngs/Stars.png";
 import { logoStyleOptions } from "../utils";
 
 type InputScreenNavigationProp = NativeStackNavigationProp<
@@ -39,6 +40,7 @@ const SAMPLE_PROMPTS = [
 
 export default function InputScreen() {
   const navigation = useNavigation<InputScreenNavigationProp>();
+  const promptInputRef = useRef<PromptInputHandle>(null);
   const {
     prompt,
     setPrompt,
@@ -57,8 +59,11 @@ export default function InputScreen() {
     setPrompt(SAMPLE_PROMPTS[idx]);
   };
   const handleStyleSelect = (style: LogoStyle) => setSelectedStyle(style);
+
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
+    promptInputRef.current?.blur();
+    setPrompt("");
     await generateLogo();
   };
   const handleStatusPress = () => {
@@ -86,17 +91,9 @@ export default function InputScreen() {
               keyboardShouldPersistTaps="handled"
             >
               <View style={styles.header}>
-                {status === "idle" ? (
-                  <View style={styles.labelWrapper}>
-                    <Text style={styles.label}>Enter Your Prompt</Text>
-                    <TouchableOpacity
-                      style={styles.label}
-                      onPress={handleSurpriseMe}
-                    >
-                      <Text style={styles.surpriseText}>🎲 Surprise me</Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : (
+                {(status === "processing" ||
+                  status === "done" ||
+                  status === "error") && (
                   <View style={styles.statusContainer}>
                     <StatusChip
                       status={status}
@@ -107,11 +104,21 @@ export default function InputScreen() {
                   </View>
                 )}
 
+                <View style={styles.labelWrapper}>
+                  <Text style={styles.label}>Enter Your Prompt</Text>
+                  <TouchableOpacity onPress={handleSurpriseMe}>
+                    <Text style={styles.surpriseText}>🎲 Surprise me</Text>
+                  </TouchableOpacity>
+                </View>
+
                 <PromptInput
+                  ref={promptInputRef}
                   value={prompt}
                   onChangeText={setPrompt}
-                  onSurpriseMe={handleSurpriseMe}
+                  setPrompt={setPrompt}
+                  onSubmit={handleGenerate}
                 />
+
                 <Text style={styles.sectionTitle}>Logo Styles</Text>
                 <FlatList
                   data={logoStyleOptions}
@@ -129,13 +136,21 @@ export default function InputScreen() {
                   contentContainerStyle={styles.stylesList}
                 />
               </View>
+
               <View style={styles.buttonContainer}>
                 <Button
                   title="Create"
                   onPress={handleGenerate}
                   isLoading={isGenerating}
                   disabled={!prompt.trim()}
-                  icon={<Text style={styles.buttonIcon}>✨</Text>}
+                  icon={
+                    <Text style={styles.buttonIcon}>
+                      <ImageBackground
+                        source={Stars}
+                        style={{ width: 16, height: 16 }}
+                      />
+                    </Text>
+                  }
                 />
               </View>
             </ScrollView>
@@ -150,37 +165,30 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   imageStyle: { flex: 1 },
   safeArea: { flex: 1 },
-  header: {
-    display: "flex",
-    alignItems: "flex-start",
-  },
+  header: { alignItems: "flex-start" },
   scrollContent: {
     padding: theme.spacing.lg,
     justifyContent: "space-between",
     height: "100%",
   },
-
-  statusContainer: {
+  statusContainer: { alignItems: "center" },
+  labelWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    width: "100%",
   },
-
   label: {
     fontSize: theme.typography.fontSize.lg,
     fontWeight: "800",
     color: colors.textLabel,
     marginBottom: theme.spacing.md,
   },
-
-  surpriseButton: {
-    padding: theme.spacing.sm,
-  },
-
   surpriseText: {
     fontSize: theme.typography.fontSize.sm,
     fontWeight: "400",
     color: colors.textLabel,
   },
-
   sectionTitle: {
     fontSize: theme.typography.fontSize.lg,
     fontWeight: "800",
@@ -188,21 +196,7 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.md,
     marginBottom: theme.spacing.sm,
   },
-  stylesList: {
-    paddingVertical: theme.spacing.sm,
-  },
-
-  buttonContainer: {
-    alignItems: "center",
-    width: "100%",
-  },
-  buttonIcon: {
-    fontSize: 16,
-  },
-  labelWrapper: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-  },
+  stylesList: { paddingVertical: theme.spacing.sm },
+  buttonContainer: { alignItems: "center", width: "100%" },
+  buttonIcon: { fontSize: 16 },
 });

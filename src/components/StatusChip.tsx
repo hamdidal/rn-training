@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  Dimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Circle } from "react-native-progress";
@@ -27,8 +26,7 @@ export const StatusChip: React.FC<StatusChipProps> = ({
   logoUrl,
   onPress,
 }) => {
-  const screenWidth = Dimensions.get("window").width;
-  const chipHeight = 80;
+  const chipHeight = 70;
   const isDone = status === "done";
   const isError = status === "error";
   const isProcessing = status === "processing";
@@ -42,7 +40,7 @@ export const StatusChip: React.FC<StatusChipProps> = ({
         style={[
           styles.container,
           {
-            width: screenWidth - theme.spacing.lg * 2,
+            width: "100%",
             height: chipHeight,
             borderRadius: 16,
           },
@@ -55,7 +53,7 @@ export const StatusChip: React.FC<StatusChipProps> = ({
         style={[
           styles.container,
           {
-            width: screenWidth - theme.spacing.lg * 2,
+            width: "100%",
             height: chipHeight,
             borderRadius: 16,
             backgroundColor: isError ? colors.error : colors.surfaceLight,
@@ -76,13 +74,23 @@ export const StatusChip: React.FC<StatusChipProps> = ({
         <View
           style={[
             styles.left,
-            isProcessing  ? { backgroundColor: "#18181B" } : isError ? { backgroundColor: "#EF4444B2" } : undefined ,
+            isProcessing
+              ? { backgroundColor: "#18181B" }
+              : isError
+              ? { backgroundColor: colors.errorLight }
+              : undefined,
           ]}
         >
           {isDone && logoUrl ? (
             <Image source={{ uri: logoUrl }} style={styles.logoPreview} />
           ) : isProcessing ? (
-            <Circle size={24} progress={0} indeterminate thickness={2} />
+            <Circle
+              size={24}
+              progress={0}
+              indeterminate
+              thickness={2}
+              color={colors.text}
+            />
           ) : (
             <Image source={errorIcon} style={styles.errorIcon} />
           )}
@@ -103,14 +111,14 @@ export const StatusChip: React.FC<StatusChipProps> = ({
           <Text
             style={[
               styles.subtitle,
-              { color: isDone || isError ? "#EEE" : colors.text },
+              { color: isDone || isError ? "#EEE" : colors.subtitle },
             ]}
           >
             {isProcessing
               ? `Ready in ${timeRemaining ?? 0}s`
               : isDone
               ? "Tap to see it."
-              : "Tap to retry"}
+              : "Click to try again."}
           </Text>
         </View>
       </Container>
@@ -140,18 +148,19 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   errorIcon: {
-    width: 24,
-    height: 24,
+    width: 32,
+    height: 32,
     resizeMode: "contain",
-
   },
   title: {
     fontSize: theme.typography.fontSize.md,
-    fontWeight: "800",
+    fontWeight: "700",
+    letterSpacing: -1,
   },
   subtitle: {
     fontSize: theme.typography.fontSize.xs,
     marginTop: theme.spacing.xs,
     fontWeight: "500",
+    color: colors.subtitle,
   },
 });

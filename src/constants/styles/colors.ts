@@ -7,7 +7,10 @@ export const colors = {
     text: '#FFFFFF',
     textLabel: "#FAFAFA",
     textSecondary: '#8F8F8F',
-    error: '#F45866',
+    subtitle: "#71717A",
+    errorLight: '#F37C7C',
+    error: '#EF4444',
     success: '#4CAF50',
     border: '#333333',
+    copyLabel: "#A1A1AA"
   };

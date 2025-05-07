@@ -126,7 +126,10 @@ const OutputScreen = () => {
                   }
                 }}
               >
-                <Icon name="copy" size={18} color={colors.textSecondary} />
+                <View style={styles.copyContainer}>
+                  <Icon name="copy" size={18} color={colors.copyLabel} />
+                  <Text style={styles.copyText}>Copy</Text>
+                </View>
               </TouchableOpacity>
             </View>
             {logoRequest && (
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
   imageStyle: { flex: 1 },
 
   header: {
-    height:60,
+    height: 60,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -168,7 +171,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: theme.typography.fontSize.lg,
     fontWeight: "800",
-    color: colors.text,
+    color: colors.textLabel,
   },
 
   loadingText: {
@@ -216,7 +219,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#27272A",
     borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.lg,
+    padding: theme.spacing.ms,
     gap: theme.spacing.ms,
   },
   promptRow: {
@@ -226,13 +229,13 @@ const styles = StyleSheet.create({
   },
   promptLabel: {
     fontSize: theme.typography.fontSize.sm,
-    color: colors.textSecondary,
-    marginBottom: theme.spacing.xs,
+    color: colors.text,
   },
   promptText: {
     fontSize: theme.typography.fontSize.md,
     color: colors.text,
     marginBottom: theme.spacing.md,
+    fontWeight: "700",
   },
   tag: {
     alignSelf: "flex-start",
@@ -243,6 +246,15 @@ const styles = StyleSheet.create({
   },
   tagText: {
     color: "#fff",
+    fontSize: theme.typography.fontSize.xs,
+  },
+  copyContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing.sm,
+  },
+  copyText: {
+    color: colors.copyLabel,
     fontSize: theme.typography.fontSize.xs,
   },
 });

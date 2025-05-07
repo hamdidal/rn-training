@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { View, ActivityIndicator } from 'react-native';
 import { useFonts, 
          Manrope_400Regular, 
          Manrope_500Medium, 
@@ -15,9 +16,25 @@ export default function App() {
     Manrope_600SemiBold,
   });
 
-  setCustomText({
-    style: { fontFamily: 'Manrope_400Regular' }
-  });
+  useEffect(() => {
+    if (fontsLoaded) {
+      setCustomText({
+        style: {
+          fontFamily: 'Manrope_400Regular',
+          fontSize: 16,
+          color: '#000000',
+        }
+      });
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <>
